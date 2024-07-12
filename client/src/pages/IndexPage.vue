@@ -13,6 +13,8 @@
       </template>
     </acc-balance>
     <inex-graph></inex-graph>
+    <transaction-history :transactions="transactions" @edit-transaction="editTransaction"
+      @delete-transaction="deleteTransaction" />
   </q-page>
 </template>
 
@@ -23,12 +25,22 @@ import helloUser from '../components/helloUser.vue'
 import accBalance from '../components/accBalance.vue'
 import inexGraph from '../components/inexGraph.vue'
 
+import transactionHistory from '../components/transactionHistory.vue'
 const accountData = ref({
   cash: 100,
   saving: 210,
   loan: -150
 })
+const transactions = ref([
+  { id: 1, name: 'Naivas Supermarket', category: 'Grocery', amount: -200 },
+  { id: 2, name: 'Avanti Labs', category: 'Salary', amount: 1000 }
+])
 const total = computed(() => {
   return Object.values(accountData.value).reduce((acc, value) => acc + value, 0)
 })
+const deleteTransaction = (transactionId) => {
+  console.log(transactionId)
+  transactions.value = transactions.value.filter(transaction => transaction.id !== transactionId)
+  console.log('Deleted')
+}
 </script>

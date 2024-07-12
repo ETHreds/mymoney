@@ -1,13 +1,12 @@
 <template>
   <div>
-    <p>Cash Flow</p>
     <apexchart type="bar" :options="options" :series="series"></apexchart>
   </div>
 </template>
 <script setup>
 const options = {
   chart: {
-    id: 'Cashflow',
+    id: 'Cashflow (To do-- resize height)',
     width: '100%',
     toolbar: false
   },
