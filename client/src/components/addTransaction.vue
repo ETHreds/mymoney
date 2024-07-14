@@ -36,6 +36,8 @@
             :rules="[val => val && val.length > 0 || 'Cannot be Empty']" />
           <q-input filled v-model="transaction.name" label="Name *" hint="Organisation paid / received from" lazy-rules
             :rules="[val => val && val.length > 0 || 'Cannot be Empty']" />
+          <q-input filled v-model="transaction.category" label="Category *" hint="" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Cannot be Empty']" />
           <q-input filled type="number" v-model="transaction.amount" label="Amount *" lazy-rules :rules="[
             val => val !== null && val !== '' || 'Please type amount',
           ]" />
