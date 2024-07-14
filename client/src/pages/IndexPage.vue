@@ -21,6 +21,10 @@
 <script setup>
 import { useQuasar } from 'quasar'
 import { ref, computed } from 'vue'
+import { useTransactionStore } from '../stores/transationsStore'
+
+const transactionStore = useTransactionStore()
+const transactions = transactionStore.transactions
 
 import helloUser from '../components/helloUser.vue'
 import accBalance from '../components/accBalance.vue'
@@ -34,10 +38,6 @@ const accountData = ref({
   saving: 210,
   loan: -150
 })
-const transactions = ref([
-  { id: 1, name: 'Naivas Supermarket', category: 'Grocery', amount: -200 },
-  { id: 2, name: 'Avanti Labs', category: 'Salary', amount: 1000 }
-])
 const total = computed(() => {
   return Object.values(accountData.value).reduce((acc, value) => acc + value, 0)
 })
@@ -55,6 +55,10 @@ const editTransaction = (updatedTransaction) => {
 
   if (index !== -1) {
     transactions.value[index] = updatedTransaction
+    $q.notify({
+      message: '  Transaction Deleted',
+      color: 'primary'
+    })
   }
 }
 </script>
