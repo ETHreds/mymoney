@@ -19,6 +19,7 @@
 </template>
 
 <script setup>
+import { useQuasar } from 'quasar'
 import { ref, computed } from 'vue'
 
 import helloUser from '../components/helloUser.vue'
@@ -26,6 +27,8 @@ import accBalance from '../components/accBalance.vue'
 import inexGraph from '../components/inexGraph.vue'
 
 import transactionHistory from '../components/transactionHistory.vue'
+
+const $q = useQuasar()
 const accountData = ref({
   cash: 100,
   saving: 210,
@@ -41,6 +44,17 @@ const total = computed(() => {
 const deleteTransaction = (transactionId) => {
   console.log(transactionId)
   transactions.value = transactions.value.filter(transaction => transaction.id !== transactionId)
-  console.log('Deleted')
+  $q.notify({
+    message: '  Transaction Deleted',
+    color: 'primary'
+  })
+}
+const editTransaction = (updatedTransaction) => {
+  console.log('Edited Transaction:', updatedTransaction)
+  const index = transactions.value.findIndex(transaction => transaction.id === updatedTransaction.id)
+
+  if (index !== -1) {
+    transactions.value[index] = updatedTransaction
+  }
 }
 </script>

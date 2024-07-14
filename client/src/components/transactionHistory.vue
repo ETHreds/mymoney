@@ -24,7 +24,24 @@
                         <q-item-section @click.stop="deleteTransaction(transaction.id)">Delete</q-item-section>
                       </q-item>
                       <q-item clickable>
-                        <q-item-section @click="editTransaction(transaction)">Edit</q-item-section>
+                        <q-item-section @click="openDialog(transaction)">Edit</q-item-section>
+                        <q-dialog v-model="prompt" persistent>
+                          <q-card style="min-width: 350px">
+                            <q-card-section>
+                              <div class="text-h6">Edit Transaction</div>
+                            </q-card-section>
+
+                            <q-card-section class="q-pt-none">
+                              <q-input v-model="currentTransaction.name" label="Name" />
+                              <q-input v-model="currentTransaction.category" label="Category" />
+                              <q-input v-model="currentTransaction.amount" label="Amount" type="number" />
+                            </q-card-section>
+
+                            <q-card-actions align="right" class="text-primary">
+                              <q-btn flat label="Edit" v-close-popup @click="editTransaction(transaction)" />
+                            </q-card-actions>
+                          </q-card>
+                        </q-dialog>
                       </q-item>
                     </q-list>
                   </q-menu>
@@ -39,7 +56,10 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { ref, defineProps } from 'vue'
+
+const prompt = ref(false)
+const currentTransaction = ref({})
 
 defineProps({
   transactions: {
@@ -57,9 +77,12 @@ const getColor = (amount) => {
 // const getIcon = (amount) => {
 //   return amount < 0 ? 'info' : 'money'
 // }
-
-const editTransaction = (transaction) => {
-  emits('edit-transaction', transaction)
+const openDialog = (transaction) => {
+  prompt.value = true
+  currentTransaction.value = { ...transaction }
+}
+const editTransaction = () => {
+  emits('edit-transaction', currentTransaction.value)
 }
 
 const deleteTransaction = (transactionId) => {

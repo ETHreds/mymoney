@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-carousel v-model="slide" swipeable animated padding arrows navigation control-color="purple"
-      :navigation-position="bottom" height="auto" class=" text-primary rounded-borders">
+      navigation-position="bottom" height="auto" class=" text-primary rounded-borders">
       <q-carousel-slide name="cash" class="flex-center">
         <q-card class="my-card bg-purple text-white">
           <q-card-section>
