@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { v4 as uuidv4 } from 'uuid'
 
 
-import dbClient from "../utils/db.js";
+import dbClient from "../configs/db.js";
 
 const User = dbClient.sequelize.define('user', {
     id: {
@@ -17,7 +17,16 @@ const User = dbClient.sequelize.define('user', {
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: {
+            msg: 'Email address must be unique',
+        },
+        validate: {
+            isEmail: {
+                msg: 'Must be a valid email address',
+            },
+
+
+        }
     }
 })
 
