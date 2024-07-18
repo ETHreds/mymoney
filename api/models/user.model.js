@@ -30,8 +30,4 @@ const User = dbClient.sequelize.define('user', {
     }
 })
 
-User.beforeCreate((user) => {
-    user.id = uuidv4();
-});
-
 export default User;

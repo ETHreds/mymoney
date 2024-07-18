@@ -6,7 +6,7 @@ class UsersController {
             const users = await User.findAll();
             return res.status(200).json(users);
         } catch (error) {
-            handleSequelizeError(err, res)
+            handleSequelizeError(error, res)
 
         }
     }
