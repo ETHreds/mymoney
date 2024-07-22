@@ -22,7 +22,7 @@ class DBClient {
         try {
 
             await this.sequelize.authenticate();
-            await this.sequelize.sync({ alter: { drop: false } })
+            await this.sequelize.sync({ alter: { drop: true } })
             // await this.sequelize.drop();
             console.log('Connection has database been established successfully.');
         } catch (error) {

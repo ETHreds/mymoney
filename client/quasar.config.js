@@ -17,7 +17,8 @@ export default configure((ctx) => {
     boot: [
       'i18n',
       'axios',
-      'apexcharts'
+      'apexcharts',
+      'googleSignIn'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -46,7 +47,7 @@ export default configure((ctx) => {
         node: 'node20'
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,

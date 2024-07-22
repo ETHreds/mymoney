@@ -10,8 +10,29 @@ class UsersController {
 
         }
     }
+    static async getUserByPk(req, res) {
+        const userId = req.params.userId;
+
+        try {
+            const user = await User.findByPk(userId);
+
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+
+            res.json(user);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            handleSequelizeError(error, res)
+
+        }
+    }
+
+
     static async postNew(req, res) {
-        const { name, email } = req.body;
+        const { name, email, password } = req.body;
+        console.log(req.body)
 
         if (!email) {
             return res.status(400).json({ error: 'Missing email' });
@@ -20,11 +41,14 @@ class UsersController {
         if (!name) {
             return res.status(400).json({ error: 'Missing name' });
         }
+        if (!password) {
+            return res.status(400).json({ error: 'Missing password' });
+        }
 
         try {
 
-            const newUser = await User.create({ name, email });
-            return res.status(201).json({ id: newUser.id, name, email });
+            const newUser = await User.create({ name, email, password });
+            return res.status(201).json({ id: newUser.id, name, email, message: 'Account created. ' });
         } catch (error) {
             return handleSequelizeError(error, res);
         }

@@ -1,8 +1,10 @@
 import { DataTypes } from "sequelize";
 import { v4 as uuidv4 } from 'uuid'
+import bcrypt from "bcrypt";
 
 
 import dbClient from "../configs/db.js";
+
 
 const User = dbClient.sequelize.define('user', {
     id: {
@@ -27,7 +29,17 @@ const User = dbClient.sequelize.define('user', {
 
 
         }
-    }
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        set(value) {
+
+            const saltRounds = 10;
+            const hashedPassword = bcrypt.hashSync(value, saltRounds);
+            this.setDataValue('password', hashedPassword);
+        }
+    },
 })
 
 export default User;

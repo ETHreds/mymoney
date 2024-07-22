@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import dbClient from "../configs/db.js";
 import Account from './account.model.js'; // Ensure correct import path
 
-const Transaction = dbClient.sequelize.define('Transaction', {
+const Transaction = dbClient.sequelize.define('transaction', {
     transactionId: {
         type: DataTypes.UUID,
         primaryKey: true,

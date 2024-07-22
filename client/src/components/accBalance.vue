@@ -1,46 +1,75 @@
 <template>
-  <div>
-    <q-carousel v-model="slide" swipeable animated padding arrows navigation control-color="purple"
-      navigation-position="bottom" height="auto" class=" text-primary rounded-borders">
-      <q-carousel-slide name="cash" class="flex-center">
-        <q-card class="my-card bg-purple text-white">
-          <q-card-section>
-            <div class="text-h6">Cash Balance</div>
-            <div class="text-h4"> Ksh
-              <slot name="cash"></slot>
-            </div>
-          </q-card-section>
-        </q-card>
-      </q-carousel-slide>
-      <q-carousel-slide name="saving" class=" flex-center">
-        <q-card class="my-card bg-purple text-white">
-          <q-card-section>
-            <div class="text-h6">Saving Balance</div>
-            <div class="text-h4"> Ksh
-              <slot name="saving"></slot>
-            </div>
-          </q-card-section>
-        </q-card>
-      </q-carousel-slide>
-      <q-carousel-slide name="total" class=" flex-center">
-        <q-card class="my-card bg-purple text-white">
-          <q-card-section>
-            <div class="text-h6">Total Balance</div>
-            <div class="text-h4"> Ksh
-              <slot name="total"></slot>
-            </div>
-          </q-card-section>
-        </q-card>
-      </q-carousel-slide>
-    </q-carousel>
-
-  </div>
+  <ul class="gallery" ref="slider">
+    <li v-for="(color, index) in colors" :key="index" :style="{ background: color }"></li>
+  </ul>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
-const slide = ref('cash')
+const colors = ['#f6bd60', '#f7ede2', '#f5cac3', '#84a59d', '#f28482']
+
+const slider = ref(null)
+let isDown = false
+let startX
+let scrollLeft
+
+const handleMouseDown = (e) => {
+  isDown = true
+  slider.value.classList.add('active')
+  startX = e.pageX - slider.value.offsetLeft
+  scrollLeft = slider.value.scrollLeft
+}
+
+const handleMouseLeave = () => {
+  isDown = false
+  slider.value.classList.remove('active')
+}
+
+const handleMouseUp = () => {
+  isDown = false
+  slider.value.classList.remove('active')
+}
+
+const handleMouseMove = (e) => {
+  if (!isDown) return
+  e.preventDefault()
+  const x = e.pageX - slider.value.offsetLeft
+  const SCROLL_SPEED = 3
+  const walk = (x - startX) * SCROLL_SPEED
+  slider.value.scrollLeft = scrollLeft - walk
+}
+
+onMounted(() => {
+  const el = slider.value
+  el.addEventListener('mousedown', handleMouseDown)
+  el.addEventListener('mouseleave', handleMouseLeave)
+  el.addEventListener('mouseup', handleMouseUp)
+  el.addEventListener('mousemove', handleMouseMove)
+})
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.gallery {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(10, 80vw);
+  grid-template-rows: 1fr;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  overflow: scroll;
+  scroll-snap-type: both mandatory;
+  scroll-padding: 1rem;
+}
+
+.active {
+  scroll-snap-type: unset;
+}
+
+li {
+  scroll-snap-align: center;
+  display: inline-block;
+  border-radius: 3px;
+  font-size: 0;
+}
+</style>

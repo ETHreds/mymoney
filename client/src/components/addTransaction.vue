@@ -55,7 +55,7 @@
 // eslint-disable-next-line no-unused-vars
 import { ref, computed, watch } from 'vue'
 import { useDialogPluginComponent } from 'quasar'
-import { useTransactionStore } from '../stores/transationsStore'
+import { useTransactionStore } from '../stores/transations.store'
 
 const transactionStore = useTransactionStore()
 

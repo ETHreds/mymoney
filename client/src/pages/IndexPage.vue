@@ -1,6 +1,6 @@
 <template>
   <q-page class="">
-    <hello-user userName='John Doe' />
+    <hello-user :userName="userName" />
     <acc-balance>
       <template #cash>
         {{ accountData.cash }}
@@ -20,8 +20,36 @@
 
 <script setup>
 import { useQuasar } from 'quasar'
-import { ref, computed } from 'vue'
-import { useTransactionStore } from '../stores/transationsStore'
+import { ref, computed, onMounted } from 'vue'
+import { useTransactionStore } from '../stores/transations.store'
+import { useRoute } from 'vue-router'
+import { api } from '../boot/axios'
+
+const route = useRoute()
+const userId = ref('')
+const userName = ref('')
+const userEmail = ref('')
+
+onMounted(async () => {
+  // Extract user ID from URL parameter
+  userId.value = route.params.userId
+  console.log('User ID:', userId.value) // Debug line
+
+  if (!userId.value) {
+    console.error('User ID is undefined')
+    return
+  }
+
+  try {
+    const response = await api.get(`http://localhost:3000/users/${userId.value}`)
+    const user = response.data
+    userName.value = user.name
+    console.log('User Name:', userName.value) // Debug line
+    userEmail.value = user.email
+  } catch (error) {
+    console.error('Error fetching user data:', error)
+  }
+})
 
 const transactionStore = useTransactionStore()
 const transactions = transactionStore.transactions
