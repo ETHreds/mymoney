@@ -12,6 +12,7 @@
         {{ total }}
       </template>
     </acc-balance>
+    <quick-actions />
     <inex-graph></inex-graph>
     <transaction-history :transactions="transactions" @edit-transaction="editTransaction"
       @delete-transaction="deleteTransaction" />
@@ -57,6 +58,7 @@ const transactions = transactionStore.transactions
 import helloUser from '../components/helloUser.vue'
 import accBalance from '../components/accBalance.vue'
 import inexGraph from '../components/inexGraph.vue'
+import quickActions from 'src/components/quickActions.vue'
 
 import transactionHistory from '../components/transactionHistory.vue'
 

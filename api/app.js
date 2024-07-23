@@ -4,7 +4,6 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from './routes/index.js';
 import 'dotenv/config';
-import passport from 'passport';
 import helmet from 'helmet'
 
 
@@ -20,7 +19,7 @@ app.use(helmet())
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
-app.use(passport.initialize());
+
 
 // Routes
 app.get('/', (req, res) => {

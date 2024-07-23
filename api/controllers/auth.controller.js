@@ -1,7 +1,14 @@
-import passport from "passport"
 import handleSequelizeError from "../utils/sequelize.errors.js";
 import User from "../models/user.model.js";
+import redisClient from '../configs/redis.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import 'dotenv/config'
+
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_EXPIRATION = '24h';
+const REDIS_EXPIRATION = 24 * 60 * 60;
+
 
 class AuthController {
     static async logIn(req, res) {
@@ -18,20 +25,28 @@ class AuthController {
                 return res.status(401).json({ error: 'Unauthorized: User not found' });
             }
 
-            bcrypt.compare(password, user.password, (err, isMatch) => {
-                if (err) {
-                    return res.status(500).json({ error: 'Error comparing passwords' });
-                }
-
-                if (!isMatch) {
-                    return res.status(401).json({ error: 'Unauthorized: Invalid password' });
-                }
-
-                res.status(200).json({ user });
+            const isMatch = await new Promise((resolve, reject) => {
+                bcrypt.compare(password, user.password, (err, result) => {
+                    if (err) return reject(err);
+                    resolve(result);
+                });
             });
+
+            if (!isMatch) {
+                return res.status(401).json({ error: 'Unauthorized: Invalid password' });
+            }
+
+            const payload = { id: user.id, email: user.email };
+            const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
+            const key = `auth_${token}`;
+
+            await redisClient.set(key, user.id.toString(), REDIS_EXPIRATION);
+
+            return res.status(200).json({ token });
+
         } catch (error) {
             console.error('Login error:', error);
-            res.status(500).json({ error: 'Internal server error' });
+            return res.status(500).json({ error: 'Internal Server Error' });
         }
     }
 

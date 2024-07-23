@@ -11,7 +11,7 @@ const options = {
     toolbar: false
   },
   xaxis: {
-    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+    categories: [1991, 1992, 1993, 1994]
   },
   title: {
     text: 'Cashflow',
@@ -31,11 +31,11 @@ const options = {
 
 const series = [{
   name: 'income',
-  data: [30, 40, 45, 50, 49, 60, 70, 91]
+  data: [30, 40, 45, 50]
 },
 {
   name: 'expense',
-  data: [20, 10, 25, 50, 79, 50, 200, 1]
+  data: [20, 10, 25, 50]
 }]
 
 </script>

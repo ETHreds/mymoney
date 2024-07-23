@@ -74,6 +74,11 @@
 import { ref, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from '../stores/auth.store.js'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+console.log(route)
 
 const authStore = useAuthStore()
 
@@ -97,20 +102,20 @@ const onSignUp = async () => {
       color: 'red-5',
       textColor: 'white',
       icon: 'warning',
-      message: 'You need to accept the license and terms first'
+      message: authStore.user.name
     })
   }
 
   try {
     authStore.isSubmitting = true
-    console.log(111156789011)
+
     await authStore.signUp(reg.value)
-    console.log(11100000111)
+    console.log(authStore.user)
     $q.notify({
       color: 'green-4',
       textColor: 'white',
       icon: 'cloud_done',
-      message: 'Account created. You can now Sign In'
+      message: authStore.user.name
     })
     tab.value = 'sign-in'
   } catch (error) {
@@ -128,17 +133,19 @@ const onSignUp = async () => {
 
 const onSignIn = async () => {
   try {
+    console.log('Starting sign-in process...')
     authStore.isSubmitting = true
-    console.log(111111111)
     await authStore.signIn(signin.value)
+    console.log('Sign-in process completed.')
     if (!authStore.error) {
       $q.notify({
         color: 'green-4',
         textColor: 'white',
         icon: 'cloud_done',
-        message: 'Signed In successfully'
+        message: authStore.token
       })
     } else {
+      console.log(authStore.token)
       $q.notify({
         color: 'red-5',
         textColor: 'white',
@@ -147,7 +154,9 @@ const onSignIn = async () => {
       })
     }
   } catch (error) {
-    console.log(error)
+    console.error('Error in onSignIn:', error)
+  } finally {
+    authStore.isSubmitting = false
   }
 }
 

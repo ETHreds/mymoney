@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Transactions History</p>
+    <div class="text-h6 text-weight-bold">Transactions History</div>
 
     <q-list bordered class="rounded-borders" width="100%">
       <q-item v-for="transaction in transactions" :key="transaction.id" clickable v-ripple class="transaction-item">

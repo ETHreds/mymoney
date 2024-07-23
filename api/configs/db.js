@@ -9,7 +9,7 @@ class DBClient {
             {
                 host: process.env.DB_HOST,
                 dialect: 'postgres',
-                // logging: false,
+                logging: false,
                 define: {
                     timestamps: false,
                 }

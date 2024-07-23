@@ -1,5 +1,5 @@
 import { createClient } from 'redis';
-import promisify from 'util';
+import { promisify } from 'util';
 
 class RedisClient {
     constructor() {
@@ -7,10 +7,21 @@ class RedisClient {
         this.client.on('error', (err) => console.log(err));
         this.connected = false;
         this.client.on('connect', () => {
+            console.log('Redis is connected')
             this.connected = true;
         });
+        this.initialize();
     }
 
+    async initialize() {
+        try {
+            await this.client.connect();
+            this.connected = true;
+        } catch (err) {
+            console.error('Failed to connect to Redis:', err);
+            this.connected = false;
+        }
+    }
     isAlive() {
         return this.connected;
     }
@@ -22,8 +33,13 @@ class RedisClient {
     }
 
     async set(key, val, dur) {
-        const setAsync = promisify(this.client.set).bind(this.client);
-        await setAsync(key, val, 'EX', dur);
+        try {
+            await this.client.set(key, val, 'EX', dur);
+        } catch (err) {
+            console.error('Error setting Redis key:', err);
+            throw err;
+        }
+
     }
 
     async del(key) {
@@ -33,4 +49,11 @@ class RedisClient {
 }
 
 const redisClient = new RedisClient();
+
+// Handle graceful shutdown
+process.on('SIGTERM', async () => {
+    await redisClient.close();
+    process.exit(0);
+});
+
 export default redisClient;
