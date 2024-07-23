@@ -4,7 +4,6 @@ import { api } from '../boot/axios' // Ensure axios is installed
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
-  const token = ref(null)
   const isSubmitting = ref(false)
   const error = ref(null)
 
@@ -31,8 +30,8 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       console.log('Sending sign-in request...')
       const response = await api.post('/auth/sign-in', data)
-      console.log('Response received:', response)
-      token.value = response.data.token
+      const token = response.data.token
+      localStorage.setItem('authToken', token)
       error.value = null
     } catch (err) {
       console.error('Error during sign-in:', err)

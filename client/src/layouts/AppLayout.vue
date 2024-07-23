@@ -18,7 +18,7 @@
     <q-footer bordered class=" text-white">
       <q-tabs align="center">
         <q-route-tab to="/user" label="Home" />
-        <q-route-tab to="/accounts" label="accounts" />
+        <q-route-tab to="/accounts" label="Accounts" />
         <q-route-tab to="/goals" label="Goals" />
 
       </q-tabs>
