@@ -1,6 +1,7 @@
 import Transactions from '../models/transaction.model.js'
 import Account from '../models/account.model.js';
 import handleSequelizeError from '../utils/sequelize.errors.js'
+import { newTransactionQueue } from '../queues/transaction.queue.js'
 
 class TransactionsController {
     static async addNew(req, res) {
@@ -13,7 +14,7 @@ class TransactionsController {
                 return res.status(404).json({ error: 'Account not found' });
             }
 
-            const transaction = await Transactions.create({
+            await Transactions.create({
                 date,
                 amount,
                 transactionType,
@@ -22,8 +23,8 @@ class TransactionsController {
                 categoryId,
                 notes,
             });
-
-            return res.status(201).json(transaction);
+            await newTransactionQueue.add({ accountId });
+            return res.status(200).json({ message: 'Transaction added and balance recalculation job queued' });
         } catch (error) {
             return handleSequelizeError(error, res);
         }

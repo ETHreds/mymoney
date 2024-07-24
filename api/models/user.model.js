@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 
 
 import dbClient from "../configs/db.js";
-// import Token from "./token.model.js";
 
 
 const User = dbClient.sequelize.define('user', {
@@ -41,6 +40,5 @@ const User = dbClient.sequelize.define('user', {
         }
     },
 })
-// User.hasMany(Token, { foreignKey: 'userId' });
 
 export default User;

@@ -24,10 +24,10 @@ router.get('/users/:userId', AuthMiddleware.verifyToken, UsersController.getUser
 
 // Accounts
 router.post('/accounts', AuthMiddleware.verifyToken, AccountController.addNew)
-router.get('/accounts/:accountId', AccountController.getAccountInfo)
+router.get('/accounts/:accountId', AuthMiddleware.verifyToken, AccountController.getAccountInfo)
 
 // Transactions
-router.post('/transaction', TransactionsController.addNew)
+router.post('/transaction', AuthMiddleware.verifyToken, TransactionsController.addNew)
 
 // Authentication
 router.post('/auth/sign-in', AuthController.logIn)

@@ -1,65 +1,58 @@
-import { DataTypes } from "sequelize";
-import dbClient from "../configs/db.js";
+import { DataTypes } from 'sequelize';
+import dbClient from '../configs/db.js';
+import User from './user.model.js';
+import Category from './category.model.js';
 
-const Account = dbClient.sequelize.define('account', {
-    accountId: {
+const Budget = dbClient.sequelize.define('budget', {
+    id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
     },
-    accountName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    accountType: {
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-            isIn: {
-                args: [['cash', 'transfer', 'bank']],
-                msg: 'Invalid account type. Must be either cash, transfer, or bank.',
-            },
-        },
     },
-    subtype: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        validate: {
-            subtypeValidation() {
-                if (this.accountType === 'transfer') {
-                    if (!['mobile money', 'online money'].includes(this.subtype)) {
-                        throw new Error('Invalid subtype for transfer account. Must be either mobile money or online money.');
-                    }
-                    if (!this.providerName) {
-                        throw new Error('Provider name is required for transfer accounts.');
-                    }
-                } else if (this.accountType === 'bank') {
-                    if (!['checking', 'saving'].includes(this.subtype)) {
-                        throw new Error('Invalid subtype for bank account. Must be either checking or saving.');
-                    }
-                    if (!this.providerName) {
-                        throw new Error('Provider name is required for bank accounts.');
-                    }
-                } else if (this.subtype || this.providerName) {
-                    throw new Error('Subtype and provider name are only applicable for transfer or bank accounts.');
-                }
-            },
-        },
-    },
-    providerName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    startingBalance: {
+    amount: {
         type: DataTypes.FLOAT,
         allowNull: false,
-        defaultValue: 0.0,
     },
-    currentBalance: {
-        type: DataTypes.FLOAT,
+    startDate: {
+        type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: 0.0,
+    },
+    endDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: 'users',
+            key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+    },
+    categoryId: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: {
+            model: 'categories',
+            key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+    },
+    type: {
+        type: DataTypes.ENUM('want', 'need', 'savings'),
+        allowNull: false,
     },
 });
 
-export default Account;
+// Define Relationships
+Budget.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+Budget.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
+
+export default Budget;
